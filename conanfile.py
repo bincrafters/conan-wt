@@ -135,7 +135,6 @@ class WtConan(ConanFile):
 
     def configure_cmake(self):
         cmake = CMake(self)
-
         cmake.definitions['SHARED_LIBS'] = self.options.shared
         cmake.definitions['BUILD_EXAMPLES'] = False
         cmake.definitions['BUILD_TESTS'] = False
@@ -159,6 +158,12 @@ class WtConan(ConanFile):
         cmake.definitions['USE_SYSTEM_SQLITE3'] = True
         cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
         cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
+        if self.options.with_ssl:
+            # FIXME : wt doesn't see OpenSSL on Windows
+            cmake.definitions['SSL_PREFIX'] = self.deps_cpp_info['OpenSSL'].rootpath
+            cmake.definitions['SSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['OpenSSL'].libs)
+            cmake.definitions['SSL_INCLUDE_DIRS'] = ';'.join(self.deps_cpp_info['OpenSSL'].include_paths)
+            cmake.definitions['SSL_FOUND'] = True
         if self.settings.os == 'Windows':
             cmake.definitions['CONNECTOR_FCGI'] = False
             cmake.definitions['CONNECTOR_ISAPI'] = self.options.connector_isapi
