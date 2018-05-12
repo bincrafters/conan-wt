@@ -188,3 +188,5 @@ class WtConan(ConanFile):
         else:
             if self.options.connector_fcgi:
                 self.cpp_info.libs.append('wtfcgi')
+        if self.settings.build_type == 'Debug':
+            self.cpp_info.libs = ['%sd' % lib for lib in self.cpp_info.libs]
