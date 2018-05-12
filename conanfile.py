@@ -61,7 +61,7 @@ class WtConan(ConanFile):
     "no_std_wstring=False", \
     "multi_threaded=True", \
     "connector_http=True", \
-    "connector_isapi=False", \
+    "connector_isapi=True", \
     "connector_fcgi=False"
 
     source_subfolder = "source_subfolder"
