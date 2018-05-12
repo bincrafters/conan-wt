@@ -5,58 +5,152 @@ from conans import ConanFile, CMake, tools
 import os
 
 
-class LibnameConan(ConanFile):
-    name = "libname"
-    version = "0.0.0"
-    description = "Keep it short"
-    url = "https://github.com/bincrafters/conan-libname"
-    homepage = "https://github.com/original_author/original_lib"
-
-    # Indicates License type of the packaged library
-    license = "MIT"
-
-    # Packages the license for the conanfile.py
+class WtConan(ConanFile):
+    name = "wt"
+    version = "4.0.3"
+    description = "Wt is a C++ library for developing web applications"
+    url = "https://github.com/bincrafters/conan-wt"
+    homepage = "https://github.com/emweb/wt"
+    license = "GNU GPL v2"
     exports = ["LICENSE.md"]
-
-    # Remove following lines if the target lib does not use cmake.
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
 
-    # Options may need to change depending on the packaged library.
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = "shared=False", "fPIC=True"
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+        "with_ssl": [True, False],
+        "with_haru": [True, False],
+        "with_pango": [True, False],
+        "with_ext": [True, False],
+        "with_sqlite": [True, False],
+        "with_postgres": [True, False],
+        "with_firebird": [True, False],
+        "with_mysql": [True, False],
+        "with_mssql": [True, False],
+        "with_qt4": [True, False],
+        "with_test": [True, False],
+        "with_dbo": [True, False],
+        "with_opengl": [True, False],
+        "with_unwind": [True, False],
+        "no_std_locale": [True, False],
+        "no_std_wstring": [True, False],
+        "multi_threaded": [True, False],
+        "connector_http": [True, False],
+        "connector_isapi": [True, False],
+        "connector_fcgi": [True, False]
+    }
+    default_options = "shared=False", \
+    "fPIC=True", \
+    "with_ssl=True", \
+    "with_haru=False", \
+    "with_pango=False", \
+    "with_ext=False", \
+    "with_sqlite=True", \
+    "with_postgres=False", \
+    "with_firebird=False", \
+    "with_mysql=False", \
+    "with_mssql=False", \
+    "with_qt4=False", \
+    "with_test=True", \
+    "with_dbo=True", \
+    "with_opengl=False", \
+    "with_unwind=False", \
+    "no_std_locale=False", \
+    "no_std_wstring=False", \
+    "multi_threaded=True", \
+    "connector_http=True", \
+    "connector_isapi=False", \
+    "connector_fcgi=False"
 
-    # Custom attributes for Bincrafters recipe conventions
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
 
-    # Use version ranges for dependencies unless there's a reason not to
-    # Update 2/9/18 - Per conan team, ranges are slow to resolve.
-    # So, with libs like zlib, updates are very rare, so we now use static version
-
-
     requires = (
-        "OpenSSL/[>=1.0.2l]@conan/stable",
-        "zlib/1.2.11@conan/stable"
-    )
+                'cmake_findboost_modular/1.66.0@bincrafters/stable',
+                'boost_algorithm/1.66.0@bincrafters/stable',
+                'boost_array/1.66.0@bincrafters/stable',
+                'boost_asio/1.66.0@bincrafters/stable',
+                'boost_assign/1.66.0@bincrafters/stable',
+                'boost_config/1.66.0@bincrafters/stable',
+                'boost_bind/1.66.0@bincrafters/stable',
+                'boost_filesystem/1.66.0@bincrafters/stable',
+                'boost_fusion/1.66.0@bincrafters/stable',
+                'boost_integer/1.66.0@bincrafters/stable',
+                'boost_interprocess/1.66.0@bincrafters/stable',
+                'boost_lexical_cast/1.66.0@bincrafters/stable',
+                'boost_pool/1.66.0@bincrafters/stable',
+                'boost_math/1.66.0@bincrafters/stable',
+                'boost_multi_index/1.66.0@bincrafters/stable',
+                'boost_numeric_ublas/1.66.0@bincrafters/stable',
+                'boost_optional/1.66.0@bincrafters/stable',
+                'boost_phoenix/1.66.0@bincrafters/stable',
+                'boost_pool/1.66.0@bincrafters/stable',
+                'boost_program_options/1.66.0@bincrafters/stable',
+                'boost_range/1.66.0@bincrafters/stable',
+                'boost_serialization/1.66.0@bincrafters/stable',
+                'boost_smart_ptr/1.66.0@bincrafters/stable',
+                'boost_spirit/1.66.0@bincrafters/stable',
+                'boost_system/1.66.0@bincrafters/stable',
+                'boost_thread/1.66.0@bincrafters/stable',
+                'boost_tuple/1.66.0@bincrafters/stable',
+                'boost_tokenizer/1.66.0@bincrafters/stable',
+                'boost_variant/1.66.0@bincrafters/stable',
+                'zlib/1.2.11@conan@stable'
+               )
+
+    def requirements(self):
+        if self.options.with_ssl:
+            self.requires('OpenSSL/1.0.2o@conan/stable')
+        if self.options.with_sqlite:
+            self.requires('sqlite3/3.21.0@bincrafters/stable')
 
     def config_options(self):
         if self.settings.os == 'Windows':
             del self.options.fPIC
+            del self.options.connector_fcgi
+        else:
+            del self.options.connector_isapi
 
     def source(self):
-        source_url = "https://github.com/libauthor/libname"
-        tools.get("{0}/archive/v{1}.tar.gz".format(source_url, self.version))
+        source_url = "https://github.com/emweb/wt"
+        tools.get("{0}/archive/{1}.tar.gz".format(source_url, self.version))
         extracted_dir = self.name + "-" + self.version
-
-        #Rename to "source_subfolder" is a convention to simplify later steps
         os.rename(extracted_dir, self.source_subfolder)
 
     def configure_cmake(self):
         cmake = CMake(self)
-        cmake.definitions["BUILD_TESTS"] = False # example
-        if self.settings.os != 'Windows':
+
+        cmake.definitions['SHARED_LIBS'] = self.options.shared
+        cmake.definitions['BUILD_EXAMPLES'] = False
+        cmake.definitions['BUILD_TESTS'] = False
+        cmake.definitions['ENABLE_SSL'] = self.options.with_ssl
+        cmake.definitions['ENABLE_HARU'] = self.options.with_haru
+        cmake.definitions['ENABLE_PANGO'] = self.options.with_pango
+        cmake.definitions['ENABLE_EXT'] = self.options.with_ext
+        cmake.definitions['ENABLE_SQLITE'] = self.options.with_sqlite
+        cmake.definitions['ENABLE_POSTGRES'] = self.options.with_postgres
+        cmake.definitions['ENABLE_FIREBIRD'] = self.options.with_firebird
+        cmake.definitions['ENABLE_MYSQL'] = self.options.with_mysql
+        cmake.definitions['ENABLE_MSSQLSERVER'] = self.options.with_mssql
+        cmake.definitions['ENABLE_QT4'] = self.options.with_qt4
+        cmake.definitions['ENABLE_LIBWTTEST'] = self.options.with_test
+        cmake.definitions['ENABLE_LIBWTDBO'] = self.options.with_dbo
+        cmake.definitions['ENABLE_OPENGL'] = self.options.with_opengl
+        cmake.definitions['ENABLE_UNWIND'] = self.options.with_unwind
+        cmake.definitions['WT_NO_STD_LOCALE'] = self.options.no_std_locale
+        cmake.definitions['WT_NO_STD_WSTRING'] = self.options.no_std_wstring
+        cmake.definitions['MULTI_THREADED'] = self.options.multi_threaded
+        cmake.definitions['USE_SYSTEM_SQLITE3'] = True
+        cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
+        cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
+        if self.settings.os == 'Windows':
+            cmake.definitions['CONNECTOR_FCGI'] = False
+            cmake.definitions['CONNECTOR_ISAPI'] = self.options.connector_isapi
+        else:
+            cmake.definitions['CONNECTOR_FCGI'] = self.options.connector_fcgi
+            cmake.definitions['CONNECTOR_ISAPI'] = False
             cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
@@ -69,15 +163,28 @@ class LibnameConan(ConanFile):
         self.copy(pattern="LICENSE", dst="licenses", src=self.source_subfolder)
         cmake = self.configure_cmake()
         cmake.install()
-        # If the CMakeLists.txt has a proper install method, the steps below may be redundant
-        # If so, you can just remove the lines below
-        include_folder = os.path.join(self.source_subfolder, "include")
-        self.copy(pattern="*", dst="include", src=include_folder)
-        self.copy(pattern="*.dll", dst="bin", keep_path=False)
-        self.copy(pattern="*.lib", dst="lib", keep_path=False)
-        self.copy(pattern="*.a", dst="lib", keep_path=False)
-        self.copy(pattern="*.so*", dst="lib", keep_path=False)
-        self.copy(pattern="*.dylib", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = ['wt']
+        if self.options.with_test:
+            self.cpp_info.libs.append('wttest')
+        if self.options.with_dbo:
+            self.cpp_info.libs.append('wtdbo')
+        if self.options.with_postgres:
+            self.cpp_info.libs.append('wtdbopostgres')
+        if self.options.with_sqlite:
+            self.cpp_info.libs.append('wtdbosqlite3')
+        if self.options.with_mysql:
+            self.cpp_info.libs.append('wtdbomysql')
+        if self.options.with_mssql:
+            self.cpp_info.libs.append('wtdbomssqlserver')
+        if self.options.with_firebird:
+            self.cpp_info.libs.append('wtdbofirebird')
+        if self.options.connector_http:
+            self.cpp_info.libs.append('wthttp')
+        if self.settings.os == 'Windows':
+            if self.options.connector_isapi:
+                self.cpp_info.libs.append('wtisapi')
+        else:
+            if self.options.connector_fcgi:
+                self.cpp_info.libs.append('wtfcgi')
