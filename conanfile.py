@@ -118,6 +118,20 @@ class WtConan(ConanFile):
         tools.get("{0}/archive/{1}.tar.gz".format(source_url, self.version))
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
+        if self.settings.os == 'Windows':
+            # wt relies on auto-linking of boost, which we don't use
+            find_boost_cmake = os.path.join(self.source_subfolder, 'cmake', 'WtFindBoost-cmake.txt')
+            tools.replace_in_file(find_boost_cmake, 'SET(BOOST_WT_LIBRARIES "")',
+                                  'SET(BOOST_WT_LIBRARIES '
+                                  '${Boost_THREAD_LIBRARY} '
+                                  '${Boost_SYSTEM_LIBRARY} '
+                                  '${Boost_FILESYSTEM_LIBRARY})')
+            tools.replace_in_file(find_boost_cmake, 'SET(BOOST_WTHTTP_LIBRARIES "")',
+                                  'SET(BOOST_WTHTTP_LIBRARIES '
+                                  '${Boost_THREAD_LIBRARY} '
+                                  '${Boost_PROGRAM_OPTIONS_LIBRARY} '
+                                  '${Boost_SYSTEM_LIBRARY} '
+                                  '${Boost_FILESYSTEM_LIBRARY})')
 
     def configure_cmake(self):
         cmake = CMake(self)
