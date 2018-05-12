@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8.11)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
