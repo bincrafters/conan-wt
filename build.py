@@ -21,7 +21,10 @@ if __name__ == "__main__":
 
     filtered_builds = []
     for settings, options, env_vars, build_requires, reference in builder.items:
-        if settings['compiler'] == 'gcc' or settings['compiler'] == 'clang':
+        if settings['compiler'] == 'gcc' and float(settings['compiler.version']) >= 5:
+            if settings['compiler.libcxx'] == 'libstdc++11':
+                filtered_builds.append([settings, options, env_vars, build_requires])
+        elif settings['compiler'] == 'clang':
             if settings['compiler.libcxx'] == 'libstdc++11' or settings['compiler.libcxx'] == 'libc++':
                 filtered_builds.append([settings, options, env_vars, build_requires])
         else:
