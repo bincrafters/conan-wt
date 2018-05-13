@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from conans import ConanFile, CMake, tools
+from conans.errors import ConanException
 import os
 
 
@@ -105,6 +106,15 @@ class WtConan(ConanFile):
             self.requires('OpenSSL/1.0.2o@conan/stable')
         if self.options.with_sqlite:
             self.requires('sqlite3/3.21.0@bincrafters/stable')
+
+    def configure(self):
+        if self.settings.compiler == 'clang':
+            if str(self.settings.compiler.libcxx) == 'libstdc++':
+                raise ConanException('libstdc++ is not supported')
+        elif self.settings.compiler == 'gcc':
+            if float(self.settings.compiler.version.value) >= 5:
+                if str(self.settings.compiler.libcxx) == 'libstdc++':
+                    raise ConanException('libstdc++ is not supported')
 
     def config_options(self):
         if self.settings.os == 'Windows':
