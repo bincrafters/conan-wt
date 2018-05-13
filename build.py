@@ -4,18 +4,28 @@
 
 from bincrafters import build_template_default
 
+
 def add_build_requires(builds):
     return map(add_required_installers, builds)
 
+
 def add_required_installers(build):
     installers = ['ninja_installer/1.8.2@bincrafters/stable']
-    build.build_requires.update({"*" : installers})
+    build.build_requires.update({"*": installers})
     return build
+
 
 if __name__ == "__main__":
 
-    builder = build_template_default.get_builder()
+    builder = build_template_default.get_builder(pure_c=False)
 
-    builder.items = add_build_requires(builder.items)
+    filtered_builds = []
+    for settings, options, env_vars, build_requires, reference in builder.items:
+        if settings['compiler'] == 'gcc' or settings['compiler'] == 'clang':
+            if settings['compiler.libcxx'] == 'libstdc++11' or settings['compiler.libcxx'] == 'libc++':
+                filtered_builds.append([settings, options, env_vars, build_requires])
+        else:
+            filtered_builds.append([settings, options, env_vars, build_requires])
+    builder.builds = filtered_builds
 
     builder.run()
