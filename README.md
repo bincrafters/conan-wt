@@ -1,6 +1,6 @@
 [![Download](https://api.bintray.com/packages/bincrafters/public-conan/wt%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/wt%3Abincrafters/_latestVersion)
-[![Build Status](https://travis-ci.org/bincrafters/conan-wt.svg?branch=testing%2F4.0.3)](https://travis-ci.org/bincrafters/conan-wt)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-wt?branch=testing%2F4.0.3&svg=true)](https://ci.appveyor.com/project/bincrafters/conan-wt)
+[![Build Status](https://travis-ci.org/bincrafters/conan-wt.svg?branch=stable%2F4.0.3)](https://travis-ci.org/bincrafters/conan-wt)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-wt?branch=stable%2F4.0.3&svg=true)](https://ci.appveyor.com/project/bincrafters/conan-wt)
 
 [Conan.io](https://conan.io) package recipe for [*wt*](https://github.com/emweb/wt).
 
@@ -12,14 +12,14 @@ The packages generated with this **conanfile** can be found on [Bintray](https:/
 
 ### Basic setup
 
-    $ conan install wt/4.0.3@bincrafters/testing
+    $ conan install wt/4.0.3@bincrafters/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
 
     [requires]
-    wt/4.0.3@bincrafters/testing
+    wt/4.0.3@bincrafters/stable
 
     [generators]
     cmake
@@ -38,34 +38,34 @@ The example below shows the commands used to publish to bincrafters conan reposi
 
 The following command both runs all the steps of the conan file, and publishes the package to the local system cache.  This includes downloading dependencies from "build_requires" and "requires" , and then running the build() method.
 
-    $ conan create bincrafters/testing
+    $ conan create bincrafters/stable
 
 
 ### Available Options
 | Option        | Default | Possible Values  |
 | ------------- |:----------------- |:------------:|
-| with_qt4      | False |  [True, False] |
-| with_mysql      | False |  [True, False] |
-| with_firebird      | False |  [True, False] |
-| with_sqlite      | True |  [True, False] |
-| with_unwind      | False |  [True, False] |
-| with_opengl      | False |  [True, False] |
-| no_std_wstring      | False |  [True, False] |
-| no_std_locale      | False |  [True, False] |
-| with_ext      | False |  [True, False] |
-| with_postgres      | False |  [True, False] |
 | shared      | False |  [True, False] |
-| connector_isapi      | False |  [True, False] |
 | fPIC      | True |  [True, False] |
-| with_test      | True |  [True, False] |
 | with_ssl      | True |  [True, False] |
-| connector_http      | True |  [True, False] |
-| with_dbo      | True |  [True, False] |
-| connector_fcgi      | False |  [True, False] |
-| with_mssql      | False |  [True, False] |
-| with_pango      | False |  [True, False] |
-| multi_threaded      | True |  [True, False] |
 | with_haru      | False |  [True, False] |
+| with_pango      | False |  [True, False] |
+| with_ext      | False |  [True, False] |
+| with_sqlite      | True |  [True, False] |
+| with_postgres      | False |  [True, False] |
+| with_firebird      | False |  [True, False] |
+| with_mysql      | False |  [True, False] |
+| with_mssql      | False |  [True, False] |
+| with_qt4      | False |  [True, False] |
+| with_test      | True |  [True, False] |
+| with_dbo      | True |  [True, False] |
+| with_opengl      | False |  [True, False] |
+| with_unwind      | False |  [True, False] |
+| no_std_locale      | False |  [True, False] |
+| no_std_wstring      | False |  [True, False] |
+| multi_threaded      | True |  [True, False] |
+| connector_http      | True |  [True, False] |
+| connector_isapi      | True |  [True, False] |
+| connector_fcgi      | False |  [True, False] |
 
 ## Add Remote
 
@@ -73,7 +73,7 @@ The following command both runs all the steps of the conan file, and publishes t
 
 ## Upload
 
-    $ conan upload wt/4.0.3@bincrafters/testing --all -r bincrafters
+    $ conan upload wt/4.0.3@bincrafters/stable --all -r bincrafters
 
 
 ## Conan Recipe License
@@ -81,4 +81,4 @@ The following command both runs all the steps of the conan file, and publishes t
 NOTE: The conan recipe license applies only to the files of this recipe, which can be used to build and package wt.
 It does *not* in any way apply or is related to the actual software being packaged.
 
-[MIT](git@github.com:bincrafters/conan-wt.git/blob/testing/4.0.3/LICENSE.md)
+[MIT](https://github.com/bincrafters/conan-wt.git/blob/stable/4.0.3/LICENSE)
