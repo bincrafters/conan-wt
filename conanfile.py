@@ -23,7 +23,6 @@ class WtConan(ConanFile):
         "with_ssl": [True, False],
         "with_haru": [True, False],
         "with_pango": [True, False],
-        "with_ext": [True, False],
         "with_sqlite": [True, False],
         "with_postgres": [True, False],
         "with_firebird": [True, False],
@@ -46,7 +45,6 @@ class WtConan(ConanFile):
     "with_ssl=True", \
     "with_haru=False", \
     "with_pango=False", \
-    "with_ext=False", \
     "with_sqlite=True", \
     "with_postgres=False", \
     "with_firebird=False", \
@@ -141,7 +139,6 @@ class WtConan(ConanFile):
         cmake.definitions['ENABLE_SSL'] = self.options.with_ssl
         cmake.definitions['ENABLE_HARU'] = self.options.with_haru
         cmake.definitions['ENABLE_PANGO'] = self.options.with_pango
-        cmake.definitions['ENABLE_EXT'] = self.options.with_ext
         cmake.definitions['ENABLE_SQLITE'] = self.options.with_sqlite
         cmake.definitions['ENABLE_POSTGRES'] = self.options.with_postgres
         cmake.definitions['ENABLE_FIREBIRD'] = self.options.with_firebird
