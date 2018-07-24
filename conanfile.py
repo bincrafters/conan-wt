@@ -181,11 +181,9 @@ class WtConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ['wt']
+        self.cpp_info.libs = []
         if self.options.with_test:
             self.cpp_info.libs.append('wttest')
-        if self.options.with_dbo:
-            self.cpp_info.libs.append('wtdbo')
         if self.options.with_postgres:
             self.cpp_info.libs.append('wtdbopostgres')
         if self.options.with_sqlite:
@@ -196,6 +194,8 @@ class WtConan(ConanFile):
             self.cpp_info.libs.append('wtdbomssqlserver')
         if self.options.with_firebird:
             self.cpp_info.libs.append('wtdbofirebird')
+        if self.options.with_dbo:
+            self.cpp_info.libs.append('wtdbo')
         if self.options.connector_http:
             self.cpp_info.libs.append('wthttp')
         if self.settings.os == 'Windows':
@@ -204,6 +204,7 @@ class WtConan(ConanFile):
         else:
             if self.options.connector_fcgi:
                 self.cpp_info.libs.append('wtfcgi')
+        self.cpp_info.libs.append('wt')
         if self.settings.build_type == 'Debug':
             self.cpp_info.libs = ['%sd' % lib for lib in self.cpp_info.libs]
         if self.settings.os == 'Linux':
