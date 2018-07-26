@@ -23,7 +23,6 @@ class WtConan(ConanFile):
         "with_ssl": [True, False],
         "with_haru": [True, False],
         "with_pango": [True, False],
-        "with_ext": [True, False],
         "with_sqlite": [True, False],
         "with_postgres": [True, False],
         "with_firebird": [True, False],
@@ -46,7 +45,6 @@ class WtConan(ConanFile):
     "with_ssl=True", \
     "with_haru=False", \
     "with_pango=False", \
-    "with_ext=False", \
     "with_sqlite=True", \
     "with_postgres=False", \
     "with_firebird=False", \
@@ -141,7 +139,6 @@ class WtConan(ConanFile):
         cmake.definitions['ENABLE_SSL'] = self.options.with_ssl
         cmake.definitions['ENABLE_HARU'] = self.options.with_haru
         cmake.definitions['ENABLE_PANGO'] = self.options.with_pango
-        cmake.definitions['ENABLE_EXT'] = self.options.with_ext
         cmake.definitions['ENABLE_SQLITE'] = self.options.with_sqlite
         cmake.definitions['ENABLE_POSTGRES'] = self.options.with_postgres
         cmake.definitions['ENABLE_FIREBIRD'] = self.options.with_firebird
@@ -184,11 +181,9 @@ class WtConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ['wt']
+        self.cpp_info.libs = []
         if self.options.with_test:
             self.cpp_info.libs.append('wttest')
-        if self.options.with_dbo:
-            self.cpp_info.libs.append('wtdbo')
         if self.options.with_postgres:
             self.cpp_info.libs.append('wtdbopostgres')
         if self.options.with_sqlite:
@@ -199,6 +194,8 @@ class WtConan(ConanFile):
             self.cpp_info.libs.append('wtdbomssqlserver')
         if self.options.with_firebird:
             self.cpp_info.libs.append('wtdbofirebird')
+        if self.options.with_dbo:
+            self.cpp_info.libs.append('wtdbo')
         if self.options.connector_http:
             self.cpp_info.libs.append('wthttp')
         if self.settings.os == 'Windows':
@@ -207,6 +204,7 @@ class WtConan(ConanFile):
         else:
             if self.options.connector_fcgi:
                 self.cpp_info.libs.append('wtfcgi')
+        self.cpp_info.libs.append('wt')
         if self.settings.build_type == 'Debug':
             self.cpp_info.libs = ['%sd' % lib for lib in self.cpp_info.libs]
         if self.settings.os == 'Linux':
