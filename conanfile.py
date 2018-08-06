@@ -209,3 +209,5 @@ class WtConan(ConanFile):
             self.cpp_info.libs = ['%sd' % lib for lib in self.cpp_info.libs]
         if self.settings.os == 'Linux':
             self.cpp_info.libs.append('dl')
+        elif self.settings.os == 'Windows':
+            self.cpp_info.libs.extend(['ws2_32', 'mswsock', 'wsock32'])
