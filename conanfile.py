@@ -95,7 +95,7 @@ class WtConan(ConanFile):
                 'boost_tuple/1.66.0@bincrafters/stable',
                 'boost_tokenizer/1.66.0@bincrafters/stable',
                 'boost_variant/1.66.0@bincrafters/stable',
-                'zlib/1.2.11@conan@stable'
+                'zlib/1.2.11@conan/stable'
                )
 
     def requirements(self):
