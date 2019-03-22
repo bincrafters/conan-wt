@@ -7,7 +7,7 @@ import os
 
 class WtConan(ConanFile):
     name = "wt"
-    version = "4.0.3"
+    version = "4.0.5"
     description = "Wt is a C++ library for developing web applications"
     url = "https://github.com/bincrafters/conan-wt"
     homepage = "https://github.com/emweb/wt"
