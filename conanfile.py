@@ -68,20 +68,6 @@ class WtConan(ConanFile):
                   sha256="03a8b59e054780f13443e95b6acd01a4575db70f718aed39c8bdf830253823d6")
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
-        if self.settings.os == 'Windows':
-            # wt relies on auto-linking of boost, which we don't use
-            find_boost_cmake = os.path.join(self._source_subfolder, 'cmake', 'WtFindBoost-cmake.txt')
-            tools.replace_in_file(find_boost_cmake, 'SET(BOOST_WT_LIBRARIES "")',
-                                  'SET(BOOST_WT_LIBRARIES '
-                                  '${Boost_THREAD_LIBRARY} '
-                                  '${Boost_SYSTEM_LIBRARY} '
-                                  '${Boost_FILESYSTEM_LIBRARY})')
-            tools.replace_in_file(find_boost_cmake, 'SET(BOOST_WTHTTP_LIBRARIES "")',
-                                  'SET(BOOST_WTHTTP_LIBRARIES '
-                                  '${Boost_THREAD_LIBRARY} '
-                                  '${Boost_PROGRAM_OPTIONS_LIBRARY} '
-                                  '${Boost_SYSTEM_LIBRARY} '
-                                  '${Boost_FILESYSTEM_LIBRARY})')
 
     def _configure_cmake(self):
         cmake = CMake(self)
