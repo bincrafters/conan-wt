@@ -71,7 +71,7 @@ class WtConan(ConanFile):
         if self.options.with_ssl:
             self.requires('OpenSSL/1.0.2o@conan/stable')
         if self.options.with_sqlite:
-            self.requires('sqlite3/3.21.0@bincrafters/stable')
+            self.requires('sqlite3/3.29.0@bincrafters/stable')
 
     def config_options(self):
         if self.settings.os == 'Windows':
