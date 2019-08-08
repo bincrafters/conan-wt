@@ -69,7 +69,7 @@ class WtConan(ConanFile):
 
     def requirements(self):
         if self.options.with_ssl:
-            self.requires('OpenSSL/1.0.2o@conan/stable')
+            self.requires('OpenSSL/1.1.1c@conan/stable')
         if self.options.with_sqlite:
             self.requires('sqlite3/3.29.0@bincrafters/stable')
 
