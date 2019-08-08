@@ -65,38 +65,7 @@ class WtConan(ConanFile):
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
 
-    requires = (
-                'cmake_findboost_modular/1.66.0@bincrafters/stable',
-                'boost_algorithm/1.66.0@bincrafters/stable',
-                'boost_array/1.66.0@bincrafters/stable',
-                'boost_asio/1.66.0@bincrafters/stable',
-                'boost_assign/1.66.0@bincrafters/stable',
-                'boost_config/1.66.0@bincrafters/stable',
-                'boost_bind/1.66.0@bincrafters/stable',
-                'boost_filesystem/1.66.0@bincrafters/stable',
-                'boost_fusion/1.66.0@bincrafters/stable',
-                'boost_integer/1.66.0@bincrafters/stable',
-                'boost_interprocess/1.66.0@bincrafters/stable',
-                'boost_lexical_cast/1.66.0@bincrafters/stable',
-                'boost_pool/1.66.0@bincrafters/stable',
-                'boost_math/1.66.0@bincrafters/stable',
-                'boost_multi_index/1.66.0@bincrafters/stable',
-                'boost_numeric_ublas/1.66.0@bincrafters/stable',
-                'boost_optional/1.66.0@bincrafters/stable',
-                'boost_phoenix/1.66.0@bincrafters/stable',
-                'boost_pool/1.66.0@bincrafters/stable',
-                'boost_program_options/1.66.0@bincrafters/stable',
-                'boost_range/1.66.0@bincrafters/stable',
-                'boost_serialization/1.66.0@bincrafters/stable',
-                'boost_smart_ptr/1.66.0@bincrafters/stable',
-                'boost_spirit/1.66.0@bincrafters/stable',
-                'boost_system/1.66.0@bincrafters/stable',
-                'boost_thread/1.66.0@bincrafters/stable',
-                'boost_tuple/1.66.0@bincrafters/stable',
-                'boost_tokenizer/1.66.0@bincrafters/stable',
-                'boost_variant/1.66.0@bincrafters/stable',
-                'zlib/1.2.11@conan/stable'
-               )
+    requires = ('zlib/1.2.11@conan/stable', 'boost/1.70.0@conan/stable')
 
     def requirements(self):
         if self.options.with_ssl:
