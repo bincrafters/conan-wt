@@ -11,7 +11,9 @@ class WtConan(ConanFile):
     description = "Wt is a C++ library for developing web applications"
     url = "https://github.com/bincrafters/conan-wt"
     homepage = "https://github.com/emweb/wt"
-    license = "GNU GPL v2"
+    topics = ("conan", "wt", "web", "webapp")
+    license = "GPL-2.0-only"
+    author = "Bincrafters <bincrafters@gmail.com>"
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
@@ -40,30 +42,10 @@ class WtConan(ConanFile):
         "connector_isapi": [True, False],
         "connector_fcgi": [True, False]
     }
-    default_options = "shared=False", \
-    "fPIC=True", \
-    "with_ssl=True", \
-    "with_haru=False", \
-    "with_pango=False", \
-    "with_sqlite=True", \
-    "with_postgres=False", \
-    "with_firebird=False", \
-    "with_mysql=False", \
-    "with_mssql=False", \
-    "with_qt4=False", \
-    "with_test=True", \
-    "with_dbo=True", \
-    "with_opengl=False", \
-    "with_unwind=False", \
-    "no_std_locale=False", \
-    "no_std_wstring=False", \
-    "multi_threaded=True", \
-    "connector_http=True", \
-    "connector_isapi=True", \
-    "connector_fcgi=False"
+    default_options = {'shared': False, 'fPIC': True, 'with_ssl': True, 'with_haru': False, 'with_pango': False, 'with_sqlite': True, 'with_postgres': False, 'with_firebird': False, 'with_mysql': False, 'with_mssql': False, 'with_qt4': False, 'with_test': True, 'with_dbo': True, 'with_opengl': False, 'with_unwind': False, 'no_std_locale': False, 'no_std_wstring': False, 'multi_threaded': True, 'connector_http': True, 'connector_isapi': True, 'connector_fcgi': False}
 
-    source_subfolder = "source_subfolder"
-    build_subfolder = "build_subfolder"
+    _source_subfolder = "source_subfolder"
+    _build_subfolder = "build_subfolder"
 
     requires = ('zlib/1.2.11@conan/stable', 'boost/1.70.0@conan/stable')
 
@@ -85,10 +67,10 @@ class WtConan(ConanFile):
         tools.get("{0}/archive/{1}.tar.gz".format(source_url, self.version),
                   sha256="03a8b59e054780f13443e95b6acd01a4575db70f718aed39c8bdf830253823d6")
         extracted_dir = self.name + "-" + self.version
-        os.rename(extracted_dir, self.source_subfolder)
+        os.rename(extracted_dir, self._source_subfolder)
         if self.settings.os == 'Windows':
             # wt relies on auto-linking of boost, which we don't use
-            find_boost_cmake = os.path.join(self.source_subfolder, 'cmake', 'WtFindBoost-cmake.txt')
+            find_boost_cmake = os.path.join(self._source_subfolder, 'cmake', 'WtFindBoost-cmake.txt')
             tools.replace_in_file(find_boost_cmake, 'SET(BOOST_WT_LIBRARIES "")',
                                   'SET(BOOST_WT_LIBRARIES '
                                   '${Boost_THREAD_LIBRARY} '
@@ -101,7 +83,7 @@ class WtConan(ConanFile):
                                   '${Boost_SYSTEM_LIBRARY} '
                                   '${Boost_FILESYSTEM_LIBRARY})')
 
-    def configure_cmake(self):
+    def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions['SHARED_LIBS'] = self.options.shared
         cmake.definitions['BUILD_EXAMPLES'] = False
@@ -138,16 +120,16 @@ class WtConan(ConanFile):
             cmake.definitions['CONNECTOR_FCGI'] = self.options.connector_fcgi
             cmake.definitions['CONNECTOR_ISAPI'] = False
             cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
-        cmake.configure(build_folder=self.build_subfolder)
+        cmake.configure(build_folder=self._build_subfolder)
         return cmake
 
     def build(self):
-        cmake = self.configure_cmake()
+        cmake = self._configure_cmake()
         cmake.build()
 
     def package(self):
-        self.copy(pattern="LICENSE", dst="licenses", src=self.source_subfolder)
-        cmake = self.configure_cmake()
+        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        cmake = self._configure_cmake()
         cmake.install()
 
     def package_info(self):
