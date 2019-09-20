@@ -47,13 +47,13 @@ class WtConan(ConanFile):
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
-    requires = ('zlib/1.2.11@conan/stable', 'boost/1.70.0@conan/stable')
+    requires = ('zlib/1.2.11', 'boost/1.70.0')
 
     def requirements(self):
         if self.options.with_ssl:
-            self.requires('OpenSSL/1.1.1c@conan/stable')
+            self.requires('openssl/1.1.1d')
         if self.options.with_sqlite:
-            self.requires('sqlite3/3.29.0@bincrafters/stable')
+            self.requires('sqlite3/3.29.0')
 
     def config_options(self):
         if self.settings.os == 'Windows':
@@ -95,9 +95,9 @@ class WtConan(ConanFile):
         cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
         if self.options.with_ssl:
             # FIXME : wt doesn't see OpenSSL on Windows
-            cmake.definitions['SSL_PREFIX'] = self.deps_cpp_info['OpenSSL'].rootpath
-            cmake.definitions['SSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['OpenSSL'].libs)
-            cmake.definitions['SSL_INCLUDE_DIRS'] = ';'.join(self.deps_cpp_info['OpenSSL'].include_paths)
+            cmake.definitions['SSL_PREFIX'] = self.deps_cpp_info['openssl'].rootpath
+            cmake.definitions['SSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['openssl'].libs)
+            cmake.definitions['SSL_INCLUDE_DIRS'] = ';'.join(self.deps_cpp_info['openssl'].include_paths)
             cmake.definitions['SSL_FOUND'] = True
         if self.settings.os == 'Windows':
             cmake.definitions['CONNECTOR_FCGI'] = False
