@@ -10,7 +10,6 @@ class WtConan(ConanFile):
     homepage = "https://github.com/emweb/wt"
     topics = ("conan", "wt", "web", "webapp")
     license = "GPL-2.0-only"
-    author = "Bincrafters <bincrafters@gmail.com>"
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
