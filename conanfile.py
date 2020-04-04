@@ -10,7 +10,6 @@ class WtConan(ConanFile):
     homepage = "https://github.com/emweb/wt"
     topics = ("conan", "wt", "web", "webapp")
     license = "GPL-2.0-only"
-    exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
 
@@ -47,7 +46,7 @@ class WtConan(ConanFile):
 
     def requirements(self):
         if self.options.with_ssl:
-            self.requires('openssl/1.1.1d')
+            self.requires('openssl/1.1.1f')
         if self.options.with_sqlite:
             self.requires('sqlite3/3.29.0')
 
