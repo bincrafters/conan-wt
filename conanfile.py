@@ -42,13 +42,13 @@ class WtConan(ConanFile):
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
-    requires = ('zlib/1.2.11', 'boost/1.70.0')
+    requires = ('zlib/1.2.11', 'boost/1.73.0')
 
     def requirements(self):
         if self.options.with_ssl:
-            self.requires('openssl/1.1.1f')
+            self.requires('openssl/1.1.1g')
         if self.options.with_sqlite:
-            self.requires('sqlite3/3.29.0')
+            self.requires('sqlite3/3.31.1')
 
     def config_options(self):
         if self.settings.os == 'Windows':
