@@ -4,7 +4,7 @@ import os
 
 class WtConan(ConanFile):
     name = "wt"
-    version = "4.1.0"
+    version = "4.3.1"
     description = "Wt is a C++ library for developing web applications"
     url = "https://github.com/bincrafters/conan-wt"
     homepage = "https://github.com/emweb/wt"
@@ -58,9 +58,7 @@ class WtConan(ConanFile):
             del self.options.connector_isapi
 
     def source(self):
-        source_url = "https://github.com/emweb/wt"
-        tools.get("{0}/archive/{1}.tar.gz".format(source_url, self.version),
-                  sha256="03a8b59e054780f13443e95b6acd01a4575db70f718aed39c8bdf830253823d6")
+        tools.get(**self.conan_data["sources"][self.version])
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
