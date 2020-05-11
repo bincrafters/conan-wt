@@ -42,6 +42,8 @@ class WtConan(ConanFile):
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
 
+    _cmake = None
+
     requires = ('zlib/1.2.11', 'boost/1.73.0')
 
     def requirements(self):
@@ -63,47 +65,49 @@ class WtConan(ConanFile):
         os.rename(extracted_dir, self._source_subfolder)
 
     def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.definitions['SHARED_LIBS'] = self.options.shared
-        cmake.definitions['BUILD_EXAMPLES'] = False
-        cmake.definitions['BUILD_TESTS'] = False
-        cmake.definitions['ENABLE_SSL'] = self.options.with_ssl
-        cmake.definitions['ENABLE_HARU'] = self.options.with_haru
-        cmake.definitions['ENABLE_PANGO'] = self.options.with_pango
-        cmake.definitions['ENABLE_SQLITE'] = self.options.with_sqlite
-        cmake.definitions['ENABLE_POSTGRES'] = self.options.with_postgres
-        cmake.definitions['ENABLE_FIREBIRD'] = self.options.with_firebird
-        cmake.definitions['ENABLE_MYSQL'] = self.options.with_mysql
-        cmake.definitions['ENABLE_MSSQLSERVER'] = self.options.with_mssql
-        cmake.definitions['ENABLE_QT4'] = self.options.with_qt4
-        cmake.definitions['ENABLE_LIBWTTEST'] = self.options.with_test
-        cmake.definitions['ENABLE_LIBWTDBO'] = self.options.with_dbo
-        cmake.definitions['ENABLE_OPENGL'] = self.options.with_opengl
-        cmake.definitions['ENABLE_UNWIND'] = self.options.with_unwind
-        cmake.definitions['WT_NO_STD_LOCALE'] = self.options.no_std_locale
-        cmake.definitions['WT_NO_STD_WSTRING'] = self.options.no_std_wstring
-        cmake.definitions['MULTI_THREADED'] = self.options.multi_threaded
-        cmake.definitions['USE_SYSTEM_SQLITE3'] = True
-        cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
-        cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
-        cmake.definitions['BOOST_DYNAMIC'] = self.options['boost'].shared
+        if self._cmake:
+            return self._cmake
+        self._cmake = CMake(self)
+        self._cmake.definitions['SHARED_LIBS'] = self.options.shared
+        self._cmake.definitions['BUILD_EXAMPLES'] = False
+        self._cmake.definitions['BUILD_TESTS'] = False
+        self._cmake.definitions['ENABLE_SSL'] = self.options.with_ssl
+        self._cmake.definitions['ENABLE_HARU'] = self.options.with_haru
+        self._cmake.definitions['ENABLE_PANGO'] = self.options.with_pango
+        self._cmake.definitions['ENABLE_SQLITE'] = self.options.with_sqlite
+        self._cmake.definitions['ENABLE_POSTGRES'] = self.options.with_postgres
+        self._cmake.definitions['ENABLE_FIREBIRD'] = self.options.with_firebird
+        self._cmake.definitions['ENABLE_MYSQL'] = self.options.with_mysql
+        self._cmake.definitions['ENABLE_MSSQLSERVER'] = self.options.with_mssql
+        self._cmake.definitions['ENABLE_QT4'] = self.options.with_qt4
+        self._cmake.definitions['ENABLE_LIBWTTEST'] = self.options.with_test
+        self._cmake.definitions['ENABLE_LIBWTDBO'] = self.options.with_dbo
+        self._cmake.definitions['ENABLE_OPENGL'] = self.options.with_opengl
+        self._cmake.definitions['ENABLE_UNWIND'] = self.options.with_unwind
+        self._cmake.definitions['WT_NO_STD_LOCALE'] = self.options.no_std_locale
+        self._cmake.definitions['WT_NO_STD_WSTRING'] = self.options.no_std_wstring
+        self._cmake.definitions['MULTI_THREADED'] = self.options.multi_threaded
+        self._cmake.definitions['USE_SYSTEM_SQLITE3'] = True
+        self._cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
+        self._cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
+        self._cmake.definitions['BOOST_DYNAMIC'] = self.options['boost'].shared
         if self.options.with_ssl:
-            # FIXME : wt doesn't see OpenSSL on Windows
-            cmake.definitions['SSL_PREFIX'] = self.deps_cpp_info['openssl'].rootpath
-            cmake.definitions['SSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['openssl'].libs)
-            cmake.definitions['SSL_INCLUDE_DIRS'] = ';'.join(self.deps_cpp_info['openssl'].include_paths)
-            cmake.definitions['SSL_FOUND'] = True
+            self._cmake.definitions['OPENSSL_PREFIX'] = self.deps_cpp_info['openssl'].rootpath
+            self._cmake.definitions['OPENSSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['openssl'].libs + self.deps_cpp_info['openssl'].system_libs)
+            self._cmake.definitions['OPENSSL_INCLUDE_DIR'] = ';'.join(self.deps_cpp_info['openssl'].include_paths)
+            self._cmake.definitions['OPENSSL_FOUND'] = True
         if self.settings.os == 'Windows':
-            cmake.definitions['CONNECTOR_FCGI'] = False
-            cmake.definitions['CONNECTOR_ISAPI'] = self.options.connector_isapi
+            self._cmake.definitions['CONNECTOR_FCGI'] = False
+            self._cmake.definitions['CONNECTOR_ISAPI'] = self.options.connector_isapi
         else:
-            cmake.definitions['CONNECTOR_FCGI'] = self.options.connector_fcgi
-            cmake.definitions['CONNECTOR_ISAPI'] = False
-            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
-        cmake.configure(build_folder=self._build_subfolder)
-        return cmake
+            self._cmake.definitions['CONNECTOR_FCGI'] = self.options.connector_fcgi
+            self._cmake.definitions['CONNECTOR_ISAPI'] = False
+            self._cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
+        self._cmake.configure(build_folder=self._build_subfolder)
+        return self._cmake
 
     def build(self):
+        tools.replace_in_file(os.path.join(self._source_subfolder, 'CMakeLists.txt'), 'find_package(OpenSSL)', '#find_package(OpenSSL)')
         cmake = self._configure_cmake()
         cmake.build()
 
