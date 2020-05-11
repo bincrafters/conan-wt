@@ -86,6 +86,7 @@ class WtConan(ConanFile):
         cmake.definitions['USE_SYSTEM_SQLITE3'] = True
         cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
         cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
+        cmake.definitions['BOOST_DYNAMIC'] = self.options['boost'].shared
         if self.options.with_ssl:
             # FIXME : wt doesn't see OpenSSL on Windows
             cmake.definitions['SSL_PREFIX'] = self.deps_cpp_info['openssl'].rootpath
