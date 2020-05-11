@@ -91,6 +91,13 @@ class WtConan(ConanFile):
         self._cmake.definitions['DEBUG'] = self.settings.build_type == 'Debug'
         self._cmake.definitions['CONNECTOR_HTTP'] = self.options.connector_http
         self._cmake.definitions['BOOST_DYNAMIC'] = self.options['boost'].shared
+        self._cmake.definitions['BOOST_PREFIX'] = self.deps_cpp_info['boost'].rootpath
+        boost_version = self.deps_cpp_info['boost'].version
+        self._cmake.definitions['Boost_ADDITIONAL_VERSIONS'] = boost_version[0:boost_version.rindex(".")]
+        self._cmake.definitions['BOOST_PREFIX_DEFAULT'] = self.deps_cpp_info['boost'].rootpath
+        self._cmake.definitions['BOOST_DIR'] = self.deps_cpp_info['boost'].rootpath
+        self._cmake.definitions['BOOST_ROOT'] = self.deps_cpp_info['boost'].rootpath
+        self._cmake.definitions['Boost_NO_SYSTEM_PATHS'] = True
         if self.options.with_ssl:
             self._cmake.definitions['OPENSSL_PREFIX'] = self.deps_cpp_info['openssl'].rootpath
             self._cmake.definitions['OPENSSL_LIBRARIES'] = ';'.join(self.deps_cpp_info['openssl'].libs + self.deps_cpp_info['openssl'].system_libs)
